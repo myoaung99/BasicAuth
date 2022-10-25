@@ -31,7 +31,7 @@ app.use((req, res, next)=>{
     if(!req.session.user){
         return next();
     }
-    User.findOne({email: req.session.user.email})
+    User.findOne({_id: req.session.user._id})
         .then((user)=>{
             req.user = user;
             next();
@@ -101,7 +101,7 @@ app.get('/logout', (req, res, next)=>{
 
 app.post('/logout', (req, res, next)=>{
     req.session.destroy(()=>{
-        return res.redirect('/login')
+        res.redirect('/login')
     })
 })
 
@@ -115,12 +115,11 @@ app.get('/secret', (req, res, next)=>{
 })
 
 app.get('/', (req, res, next)=>{
+    return res.send('Hello, Welcome from Index Page');
+});
 
-    return res.send('Hello, Welcome from Index Page')
-})
-
-app.get((req, res, next)=>{
-    return res.send('Page not found 404.')
+app.use('',(req, res, next)=>{
+    return res.send('Page not found 404.');
 });
 
 mongoose.connect(MONGODB_URI).then(()=>(app.listen(3000))).catch(err=>console.log(err))
